@@ -6,13 +6,13 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/06 16:53:04 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/06 18:40:03 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static void		ft_lstappend(t_fd *new, t_fd *fd)
+/*static void		ft_lstappend(t_fd *new, t_fd *fd)
 {
 	t_fd	*current;
 
@@ -24,34 +24,50 @@ static void		ft_lstappend(t_fd *new, t_fd *fd)
 		current->next = new;
 		new->next = NULL;
 	}
-}
+}*/
 
 static int		ft_read_fd(const int fd, t_fd *first_link)
 {
 	int		ret;
 	char	buf[BUFF_SIZE + 1];
 	char	*str;
+	char	*tmp;
 	int		len;
 	t_fd	*new_fd;
 
 	len = 0;
+	tmp = malloc(1);
 	if (!(new_fd = (t_fd*)malloc(sizeof(t_fd))))
-		return (0);
+		return (-1);
 	new_fd->fd = fd;
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
+		buf[BUFF_SIZE] = '\0';
 		len = len + BUFF_SIZE;
 		if (!(str = (char*)malloc(sizeof(char) * len + 1)))
 			return (-1);
-		buf[BUFF_SIZE] = '\0';
-		str = ft_strjoin(str, buf);
-		free(buf);
+		str = ft_strjoin(tmp, buf);
+		ft_memdel((void**)&tmp);
+		if (!(tmp = (char*)malloc(sizeof(char) * len +1)))
+			return (-1);
+		ft_strcpy(tmp, str);
+		ft_memdel((void**)&str);
 	}
 	if (ret == -1)
 		return (-1);
-	new_fd->str = str;
-	new_fd->to_read = str;
-	ft_lstappend(new_fd, first_link);
+	printf("%s\n", tmp);
+	new_fd->str = tmp;
+	new_fd->to_read = tmp;
+	ft_memdel((void**)&tmp);
+	if (first_link != NULL)
+		ft_lstadd(first_link, new_fd);
+	else
+	{
+		first_link->fd = new_fd->fd;
+		first_link->str = new_fd->str;
+		first_link->to_read = new_fd->to_read;
+		first_link->next = NULL;
+	}
 	return (1);
 }
 
@@ -66,6 +82,8 @@ static char		*ft_seek_link_str(int fd, t_fd *files)
 	return (NULL);
 }
 
+// utiliser ft_memccpy(void *dst, void *src, int c, site_t n)
+
 int		get_next_line(const int fd, char **line)
 {
 	static t_fd	*files;
@@ -79,7 +97,6 @@ int		get_next_line(const int fd, char **line)
 	{
 		if (ft_read_fd(fd, files) == 1)
 		{
-			printf("OK\n");
 			str = ft_seek_link_str(fd, files);
 			printf("fd creation !\tstr:\n\n%s\n", str);
 			return (1);

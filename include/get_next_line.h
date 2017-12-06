@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:15:05 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/06 16:26:35 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/06 18:40:06 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 # include <stdio.h> // A SUPPRIMER printf
 
-# define BUFF_SIZE	32
+# define BUFF_SIZE	1
 
 typedef struct	s_fd
 {
