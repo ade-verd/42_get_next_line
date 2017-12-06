@@ -6,54 +6,78 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/05 18:56:47 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/06 15:16:38 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/*int		ft_readlinewidth(int fd)
+static void		ft_lstappend(t_fd *newd, t_fd *fd)
 {
-	char	buff[BUFF_SIZE + 1];
-	size_t	nbread;
+	t_fd	*current;
 
-	(void)ft_memset((void*)buff, '\0', (size_t)BUFF_SIZE);
-	nbread = read(fd, (void*)buff, (size_t)BUFF_SIZE);
-	if (nbread == -1 || nbread == 0)
-		return (-1);
-	buff[BUFF_SIZE] = '\0';
-	return (ft_atoi(buff));
-
-void	ft_read_n_printlines(int fd, size_t linewidth)
-{
-	char	*buff;
-	size_t	nbread;
-
-	if (!(buff = (char*)malloc(sizeof(*buff) * (linewidth + 1))))
-		return ;
-	(void)ft_memset((void*)buff, 0, linewidth + 1);
-	while ((nbread = read(fd, (void*)buff, linewidth)) != 0)
+	if (fd && new)
 	{
-		ft_putstr(buff);
-		(void)ft_memset((void*)buff, 0, linewidth);
+		current = fd;
+		while (current->next != NULL)
+			current = current->next;
+		current->next = new;
+		new->next = NULL;
 	}
-	free(buff)
-	return ;
-}*/
-
-static int	ft_linewidth(int fd, int start)
-{
-	
 }
 
-static int	ft_which_offset(int fd)
+static int		ft_read_fd(const int fd, t_fd *1st_link)
 {
-	
+	int		i;
+	char	*buf[BUFF_SIZE + 1];
+	char	*str;
+	int		len;
+	t_fd	*new_fd;
+
+	i = 0;
+	len = 0;
+	new_fd->fd = fd;
+	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
+	{
+		len = len + BUFF_SIZE;
+		if (!(str = (char*)malloc(sizeof(char) * len + 1)))
+			return (-1);
+		buf[BUFF_SIZE] = '\0';
+		str = ft_strjoin(str, buf);
+		free(buf);
+	}
+	if (ret == -1)
+		return (-1);
+	new_fd->str = str;
+	new_fd->to_read = str;
+	ft_lstappend(new_fd, 1st_link);
+	return (1);
+}
+
+static char		*ft_seek_link_str(int fd, t_fd *files)
+{
+	while (files)
+	{
+		if (files->fd == fd)
+			return (files->str);
+		files = files->next;
+	}
+	return (NULL);
 }
 
 int		get_next_line(const int fd, char **line)
 {
-	static int	offset;
+	static t_fd	*files;
 
-	offset = 0;
+	if (!files)
+		files = NULL;
+	if (!fd || !line)
+		return (-1);
+	if (!ft_seek_link_str(fd, files))
+	{
+		if (ft_read_fd(fd, files) == 1)
+			printf("fd creation !\tstr:\n\n%s\n", tmp->str);
+	}
+	printf("fd already exists !\tstr:\n\n%s\n", tmp->str);
+	return (1);
 }

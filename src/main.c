@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 17:46:04 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/05 18:56:46 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/06 15:16:36 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,30 @@ int		ft_open_file(char *path, int flags)
 	return (fd);
 }
 
+int		ft_display_all_fd(int fd)
+{
+	int		ret;
+	int		i;
+
+	i = 0;
+	while ((ret = get_next_line(fd, &line)) > 0)
+	{
+		if (ret == -1)
+		{
+			printf("get_next_line() error\n");
+			return (ret);
+		}
+		printf("return: %-5d\tline: %-5d\t|%s|\n", ret, i, line);
+		i++;
+	}
+	return (ret);
+}
+
+/*int		ft_two_fd(int fd1, int fd2)
+{
+	
+}*/
+
 int		main(int ac, char **av)
 {
 	char	*line;
@@ -36,12 +60,13 @@ int		main(int ac, char **av)
 	{
 		if ((fd = ft_open_file(av[1], O_RDONLY)) == -1)
 			return (-1);
-		while ((ret = get_next_line(fd, &line)) > 0)
+		ret = get_next_line(fd, &line);
+		if (ret == -1)
 		{
-			if (ret == -1)
-				printf("get_next_line() error\n");
-			printf("return: %-5d\tline: %s\n", ret, line)
+			printf("get_next_line() error\n");
+			return (-1);
 		}
+		//printf("return: %-5d\tline: %s\n", ret, line);
 	}
 	return (0);
 }

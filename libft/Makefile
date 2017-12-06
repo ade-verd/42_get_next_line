@@ -6,7 +6,7 @@
 #    By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/07 16:30:07 by ade-verd          #+#    #+#              #
-#    Updated: 2017/12/05 12:03:40 by ade-verd         ###   ########.fr        #
+#    Updated: 2017/12/06 16:04:50 by ade-verd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,6 +70,10 @@ clean:
 	@echo "Deleting object files -> " $(SUCCESS)
 
 fclean: clean
+	rm -f $(NAME)
+	@echo "Deleting library -> " $(NAME) $(SUCCESS)
+
+clean_only_lib:
 	rm -f $(NAME)
 	@echo "Deleting library -> " $(NAME) $(SUCCESS)
 
