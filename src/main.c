@@ -6,12 +6,11 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 17:46:04 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/06 15:16:36 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/06 16:46:19 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 int		ft_open_file(char *path, int flags)
 {
@@ -26,7 +25,7 @@ int		ft_open_file(char *path, int flags)
 	return (fd);
 }
 
-int		ft_display_all_fd(int fd)
+/*int		ft_display_all_fd(int fd)
 {
 	int		ret;
 	int		i;
@@ -39,11 +38,11 @@ int		ft_display_all_fd(int fd)
 			printf("get_next_line() error\n");
 			return (ret);
 		}
-		printf("return: %-5d\tline: %-5d\t|%s|\n", ret, i, line);
+		//printf("return: %-5d\tline: %-5d\t|%s|\n", ret, i, line);
 		i++;
 	}
 	return (ret);
-}
+}*/
 
 /*int		ft_two_fd(int fd1, int fd2)
 {
@@ -67,6 +66,11 @@ int		main(int ac, char **av)
 			return (-1);
 		}
 		//printf("return: %-5d\tline: %s\n", ret, line);
+		if (close(fd) == -1)
+		{
+			ft_putstr_fd("close() error" ,2);
+			return (-1);
+		}
 	}
 	return (0);
 }

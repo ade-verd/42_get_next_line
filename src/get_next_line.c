@@ -6,13 +6,13 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/06 15:16:38 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/06 16:53:04 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static void		ft_lstappend(t_fd *newd, t_fd *fd)
+static void		ft_lstappend(t_fd *new, t_fd *fd)
 {
 	t_fd	*current;
 
@@ -26,16 +26,17 @@ static void		ft_lstappend(t_fd *newd, t_fd *fd)
 	}
 }
 
-static int		ft_read_fd(const int fd, t_fd *1st_link)
+static int		ft_read_fd(const int fd, t_fd *first_link)
 {
-	int		i;
-	char	*buf[BUFF_SIZE + 1];
+	int		ret;
+	char	buf[BUFF_SIZE + 1];
 	char	*str;
 	int		len;
 	t_fd	*new_fd;
 
-	i = 0;
 	len = 0;
+	if (!(new_fd = (t_fd*)malloc(sizeof(t_fd))))
+		return (0);
 	new_fd->fd = fd;
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
@@ -50,7 +51,7 @@ static int		ft_read_fd(const int fd, t_fd *1st_link)
 		return (-1);
 	new_fd->str = str;
 	new_fd->to_read = str;
-	ft_lstappend(new_fd, 1st_link);
+	ft_lstappend(new_fd, first_link);
 	return (1);
 }
 
@@ -68,16 +69,22 @@ static char		*ft_seek_link_str(int fd, t_fd *files)
 int		get_next_line(const int fd, char **line)
 {
 	static t_fd	*files;
+	char		*str;
 
 	if (!files)
 		files = NULL;
 	if (!fd || !line)
 		return (-1);
-	if (!ft_seek_link_str(fd, files))
+	if (!(str = ft_seek_link_str(fd, files)))
 	{
 		if (ft_read_fd(fd, files) == 1)
-			printf("fd creation !\tstr:\n\n%s\n", tmp->str);
+		{
+			printf("OK\n");
+			str = ft_seek_link_str(fd, files);
+			printf("fd creation !\tstr:\n\n%s\n", str);
+			return (1);
+		}
 	}
-	printf("fd already exists !\tstr:\n\n%s\n", tmp->str);
+	printf("fd already exists !\tstr:\n\n%s\n", str);
 	return (1);
 }
