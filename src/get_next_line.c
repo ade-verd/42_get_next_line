@@ -6,13 +6,13 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/06 18:40:03 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/07 11:44:12 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/*static void		ft_lstappend(t_fd *new, t_fd *fd)
+static void		ft_lstappend(t_fd *new, t_fd *fd)
 {
 	t_fd	*current;
 
@@ -24,9 +24,9 @@
 		current->next = new;
 		new->next = NULL;
 	}
-}*/
+}
 
-static int		ft_read_fd(const int fd, t_fd *first_link)
+static int		ft_read_fd(const int fd, t_fd **first_link)
 {
 	int		ret;
 	char	buf[BUFF_SIZE + 1];
@@ -55,18 +55,14 @@ static int		ft_read_fd(const int fd, t_fd *first_link)
 	}
 	if (ret == -1)
 		return (-1);
-	printf("%s\n", tmp);
-	new_fd->str = tmp;
-	new_fd->to_read = tmp;
+	new_fd->rest = tmp;
 	ft_memdel((void**)&tmp);
-	if (first_link != NULL)
-		ft_lstadd(first_link, new_fd);
+	if (*first_link != NULL)
+		ft_lstappend(new_fd, *first_link);
 	else
 	{
-		first_link->fd = new_fd->fd;
-		first_link->str = new_fd->str;
-		first_link->to_read = new_fd->to_read;
-		first_link->next = NULL;
+		*first_link = new_fd;
+		(*first_link)->next = NULL;
 	}
 	return (1);
 }
@@ -76,7 +72,7 @@ static char		*ft_seek_link_str(int fd, t_fd *files)
 	while (files)
 	{
 		if (files->fd == fd)
-			return (files->str);
+			return (files->rest);
 		files = files->next;
 	}
 	return (NULL);
@@ -89,19 +85,17 @@ int		get_next_line(const int fd, char **line)
 	static t_fd	*files;
 	char		*str;
 
-	if (!files)
-		files = NULL;
 	if (!fd || !line)
 		return (-1);
 	if (!(str = ft_seek_link_str(fd, files)))
 	{
-		if (ft_read_fd(fd, files) == 1)
+		if (ft_read_fd(fd, &files) == 1)
 		{
 			str = ft_seek_link_str(fd, files);
-			printf("fd creation !\tstr:\n\n%s\n", str);
+			printf("fd creation !\tstr:\n%s", str);
 			return (1);
 		}
 	}
-	printf("fd already exists !\tstr:\n\n%s\n", str);
+	printf("fd already exists !\tstr:\n%s", str);
 	return (1);
 }

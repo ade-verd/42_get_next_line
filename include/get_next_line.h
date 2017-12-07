@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:15:05 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/06 18:40:06 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/07 11:44:10 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@
 typedef struct	s_fd
 {
 	int			fd;
-	char		*str;
-	char		*to_read;
+	char		*rest;
 	void		*next;
 }				t_fd;
 

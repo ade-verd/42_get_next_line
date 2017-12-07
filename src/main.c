@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 17:46:04 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/06 18:40:05 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/07 11:44:08 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,25 +51,36 @@ int		ft_open_file(char *path, int flags)
 
 int		main(int ac, char **av)
 {
+	int		i;
 	char	*line;
-	int		fd;
+	int		fd[ac - 1];
 	int		ret;
 
-	if (ac == 2)
+	i = 1;
+	if (ac > 1)
 	{
-		if ((fd = ft_open_file(av[1], O_RDONLY)) == -1)
-			return (-1);
-		ret = get_next_line(fd, &line);
-		if (ret == -1)
+		while (i < ac)
 		{
-			printf("get_next_line() error\n");
-			return (-1);
-		}
-		//printf("return: %-5d\tline: %s\n", ret, line);
-		if (close(fd) == -1)
-		{
-			ft_putstr_fd("close() error" ,2);
-			return (-1);
+			if ((fd[i] = ft_open_file(av[i], O_RDONLY)) == -1)
+				return (-1);
+			ret = get_next_line(fd[i], &line);
+			if (ret == -1)
+			{
+				printf("get_next_line() error\n");
+				return (-1);
+			}
+			ret = get_next_line(fd[i], &line);
+			if (ret == -1)
+			{
+				printf("get_next_line() error\n");
+				return (-1);
+			}
+			if (close(fd[i]) == -1)
+			{
+				ft_putstr_fd("close() error" ,2);
+				return (-1);
+			}
+			i++;
 		}
 	}
 	return (0);
