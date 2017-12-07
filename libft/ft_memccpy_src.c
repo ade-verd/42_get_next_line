@@ -1,34 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_memccpy_src.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/05 16:15:05 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/07 19:12:05 by ade-verd         ###   ########.fr       */
+/*   Created: 2017/12/07 16:36:03 by ade-verd          #+#    #+#             */
+/*   Updated: 2017/12/07 16:47:40 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include <string.h>
 
-# include <fcntl.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include "libft.h"
-
-# include <stdio.h> // A SUPPRIMER printf
-
-# define BUFF_SIZE 40
-
-typedef struct	s_fd
+void		*ft_memccpy_src(void *dst, void *src, int c, size_t n)
 {
-	int			fd;
-	char		*rest;
-	void		*next;
-}				t_fd;
+	int				i;
+	unsigned char	*dst_2;
+	unsigned char	*src_2;
+	char			*point;
 
-int		get_next_line(const int fd, char **line);
-
-#endif
+	i = 0;
+	dst_2 = (unsigned char*)dst;
+	src_2 = (unsigned char*)src;
+	point = NULL;
+	while (n--)
+	{
+		dst_2[i] = src_2[i];
+		if (src_2[i] == (unsigned char)c)
+		{
+			dst_2[i] = (unsigned char)c;
+			return (src + i + 1);
+		}
+		i++;
+	}
+	return (point);
+}

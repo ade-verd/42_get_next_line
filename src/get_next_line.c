@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/07 11:44:12 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/07 19:12:06 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,37 +26,14 @@ static void		ft_lstappend(t_fd *new, t_fd *fd)
 	}
 }
 
-static int		ft_read_fd(const int fd, t_fd **first_link)
+static t_fd		*ft_fill_fd(int fd, t_fd **first_link, char **str)
 {
-	int		ret;
-	char	buf[BUFF_SIZE + 1];
-	char	*str;
-	char	*tmp;
-	int		len;
 	t_fd	*new_fd;
 
-	len = 0;
-	tmp = malloc(1);
 	if (!(new_fd = (t_fd*)malloc(sizeof(t_fd))))
-		return (-1);
+		return (NULL);
 	new_fd->fd = fd;
-	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
-	{
-		buf[BUFF_SIZE] = '\0';
-		len = len + BUFF_SIZE;
-		if (!(str = (char*)malloc(sizeof(char) * len + 1)))
-			return (-1);
-		str = ft_strjoin(tmp, buf);
-		ft_memdel((void**)&tmp);
-		if (!(tmp = (char*)malloc(sizeof(char) * len +1)))
-			return (-1);
-		ft_strcpy(tmp, str);
-		ft_memdel((void**)&str);
-	}
-	if (ret == -1)
-		return (-1);
-	new_fd->rest = tmp;
-	ft_memdel((void**)&tmp);
+	new_fd->rest = *str;
 	if (*first_link != NULL)
 		ft_lstappend(new_fd, *first_link);
 	else
@@ -64,38 +41,73 @@ static int		ft_read_fd(const int fd, t_fd **first_link)
 		*first_link = new_fd;
 		(*first_link)->next = NULL;
 	}
-	return (1);
+	return (new_fd);
 }
 
-static char		*ft_seek_link_str(int fd, t_fd *files)
+static t_fd		*ft_read_fd(const int fd, t_fd **first_link)
+{
+	int		ret;
+	char	buf[BUFF_SIZE + 1];
+	char	*str;
+	char	*tmp;
+	int		len;
+
+	len = 0;
+	tmp = (char*)malloc(1);
+	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
+	{
+		buf[BUFF_SIZE] = '\0';
+		len = len + BUFF_SIZE;
+		if (!(str = (char*)malloc(sizeof(char) * len + 1)))
+			return (NULL);
+		str = ft_strjoin(tmp, buf);
+		ft_memdel((void**)&tmp);
+		if (!(tmp = (char*)malloc(sizeof(char) * len +1)))
+			return (NULL);
+		ft_strcpy(tmp, str);
+		ft_memdel((void**)&str);
+	}
+	if (ret == -1)
+		return (NULL);
+	return(ft_fill_fd(fd, first_link, &tmp));
+}
+
+static t_fd		*ft_seek_link(int fd, t_fd *files)
 {
 	while (files)
 	{
 		if (files->fd == fd)
-			return (files->rest);
+			return (files);
 		files = files->next;
 	}
 	return (NULL);
 }
 
-// utiliser ft_memccpy(void *dst, void *src, int c, site_t n)
-
-int		get_next_line(const int fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
 	static t_fd	*files;
-	char		*str;
+	t_fd		*match_fd;
 
 	if (!fd || !line)
 		return (-1);
-	if (!(str = ft_seek_link_str(fd, files)))
+	if (!(match_fd = ft_seek_link(fd, files)))
 	{
-		if (ft_read_fd(fd, &files) == 1)
-		{
-			str = ft_seek_link_str(fd, files);
-			printf("fd creation !\tstr:\n%s", str);
-			return (1);
-		}
+		if (!(match_fd = ft_read_fd(fd, &files)))
+			return (-1);
 	}
-	printf("fd already exists !\tstr:\n%s", str);
-	return (1);
+	if (!(*line = ft_strnew(sizeof(char) * ft_strlen(match_fd->rest) + 1)))
+		return (-1);
+	if (!(match_fd->rest = (char*)ft_memccpy_src(*line, match_fd->rest, '\n', 
+					ft_strlen(match_fd->rest))))
+		return (-1);
+	if (!*line)
+		return (-1);
+	*line = ft_strtrim(*line);
+	printf("len: %lu\t", ft_strlen(match_fd->rest));
+	if (ft_strlen(match_fd->rest) > 0)
+		return (1);
+	match_fd->fd = 0;
+	match_fd->rest = NULL;
+	//ft_memdel((void**)&match_fd);
+	return (0);
 }

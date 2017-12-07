@@ -6,7 +6,7 @@
 #    By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/05 13:46:57 by ade-verd          #+#    #+#              #
-#    Updated: 2017/12/06 16:03:53 by ade-verd         ###   ########.fr        #
+#    Updated: 2017/12/07 18:49:40 by ade-verd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,8 @@ OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 CPPFLAGS = -Iinclude -Ilibft
 LDFLAGS = -Llibft
 LDLIBS = -lft
+LIB_PATH = libft/
+INC_PATH = include/
 
 CC = gcc
 CFLAGS = -Werror -Wall -Wextra
@@ -45,7 +47,7 @@ WARNING = $(C_WARN)WARNING$(C_NO)
 
 all: $(NAME)
 
-$(NAME): obj $(OBJ) $(LIB)
+$(NAME): obj $(OBJ) $(LIB) $(INC_PATH)
 	@$(CC) $(LDFLAGS) $(LDLIBS) $(OBJ) -o $(NAME)
 	@echo "Compiling -> " $(NAME) $(SUCCESS)
 
@@ -55,7 +57,7 @@ $(LIB):
 obj:
 	@mkdir -p $(OBJ_PATH)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c 
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 	@echo "Linking -> " $< $(DONE)
 

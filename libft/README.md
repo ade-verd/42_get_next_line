@@ -222,3 +222,12 @@ Exemple : ft_countwords("*salut*les***etudiants*",’*’) renvoie 3 pour "salut
 > void	ft_swap(int *a, int *b);
 
 Echange le contenu de deux entiers dont les adresses sont données en paramètres.
+
+### [x] ft_memccpy
+> void		*ft_memccpy_src(void *dst, void *src, int c, size_t n);
+
+La fonction ft_memccpy_src() copie au plus n octets de la zone mémoire src vers la zone mémoire dest, s'arrêtant dès qu'elle rencontre le caractère c.
+
+La fonction ft_memccpy_src() renvoie un pointeur sur le caractère immédiatement après c dans la zone SRC, ou NULL si c n'a pas été trouvé dans les n premiers caractères de src.
+
+Elle a un comportement similaire à ft_memccpy(), qui elle, renvoie un pointeur sur la caractère immédiatement après c dans la zone DEST ou NULL si c n'a pas été trouvé.
