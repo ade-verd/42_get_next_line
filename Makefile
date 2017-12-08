@@ -6,7 +6,7 @@
 #    By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/05 13:46:57 by ade-verd          #+#    #+#              #
-#    Updated: 2017/12/07 18:49:40 by ade-verd         ###   ########.fr        #
+#    Updated: 2017/12/08 20:24:18 by ade-verd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,13 +22,29 @@ OBJ_NAME = $(SRC_NAME:.c=.o)
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 
 CPPFLAGS = -Iinclude -Ilibft
-LDFLAGS = -Llibft
+LDFLAGS = -L libft
 LDLIBS = -lft
-LIB_PATH = libft/
+LIB_PATH = libft
 INC_PATH = include/
 
 CC = gcc
-CFLAGS = -Werror -Wall -Wextra
+
+ifeq ($(UNAME), Darwin)
+	CC := gcc
+	CFLAGS += -Werror -Wall -Wextra
+endif
+ifeq ($(UNAME), Linux)
+	ifeq (, $(shell which clang))
+		CC := gcc
+	else
+		CC := clang
+	endif
+	CFLAGS += -Wno-unused-result
+endif
+ifeq ($(UNAME), CYGWIN_NT-6.3)
+	CC := gcc
+	CFLAGS += -I./libft/inc
+endif
 
 #Colors font
 C_NO = "\033[00m"
@@ -47,18 +63,18 @@ WARNING = $(C_WARN)WARNING$(C_NO)
 
 all: $(NAME)
 
-$(NAME): obj $(OBJ) $(LIB) $(INC_PATH)
-	@$(CC) $(LDFLAGS) $(LDLIBS) $(OBJ) -o $(NAME)
+$(NAME): lib obj $(OBJ) $(INC_PATH)
+	$(CC) $(LDFLAGS) $(LDLIBS) $(OBJ) -o $(NAME)
 	@echo "Compiling -> " $(NAME) $(SUCCESS)
 
-$(LIB):
+lib:
 	@make -C $(LIB_PATH)
 
 obj:
 	@mkdir -p $(OBJ_PATH)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c 
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 	@echo "Linking -> " $< $(DONE)
 
 clean:

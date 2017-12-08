@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 17:46:04 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/07 19:12:04 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/08 10:47:25 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,6 @@ void		ft_display_all_fd(char *path)
 
 int		main(int ac, char **av)
 {
-	int		i;
-
-	i = 1;
 	if (ac >= 2)
 	{
 		ft_display_all_fd(av[1]);
