@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/10 18:33:32 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/10 23:31:00 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static t_fd		*ft_read_fd(const int fd, t_fd **first_link)
 	int		len;
 
 	len = 0;
-	str = (char*)malloc(1);
+	str = (char*)ft_memalloc(1);
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[ret] = '\0';
@@ -69,7 +69,6 @@ static t_fd		*ft_read_fd(const int fd, t_fd **first_link)
 	}
 	if (ret == -1)
 		return (NULL);
-	printf("\nstr:\n%s", str);
 	return(ft_fill_fd(fd, first_link, &str));
 }
 
@@ -96,19 +95,21 @@ int				get_next_line(const int fd, char **line)
 		if (!(match_fd = ft_read_fd(fd, &files)))
 			return (-1);
 	}
-	if (!(*line = ft_strnew(sizeof(char) * ft_strlen(match_fd->rest) + 1)))
+	if (ft_strlen(match_fd->rest) == 0)
+		return (0);
+	if (!(*line = ft_strnew(sizeof(char) * ft_strlen(match_fd->rest))))
 		return (-1);
 	if (!(match_fd->rest = (char*)ft_memccpy_src(*line, match_fd->rest, '\n', 
-					ft_strlen(match_fd->rest))))
+					ft_strlen(match_fd->rest) + 1)))
 		return (-1);
-	if (!*line)
-		return (-1);
-	*line = ft_strtrim(*line);
-	printf("rest_len: %lu\tfd: %d\t", ft_strlen(match_fd->rest), fd);
+	//*line = ft_strtrim(*line);
+	if (ft_strchr(*line, '\n'))
+		*line = ft_strsub(*line, 0, ft_strlen(*line) - 1);
 	if (ft_strchr(match_fd->rest, '\n'))
 		return (1);
 	match_fd->fd = 0;
 	match_fd->rest = NULL;
 	//ft_memdel((void**)&match_fd);
-	return (0);
+	//printf("line: %s\n", *line);
+	return (1);
 }

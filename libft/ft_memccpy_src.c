@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/07 16:36:03 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/07 16:47:40 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/10 22:24:34 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void		*ft_memccpy_src(void *dst, void *src, int c, size_t n)
 	while (n--)
 	{
 		dst_2[i] = src_2[i];
-		if (src_2[i] == (unsigned char)c)
+		if (src_2[i] == (unsigned char)c || src_2[i] == '\0')
 		{
 			dst_2[i] = (unsigned char)c;
 			return (src + i + 1);

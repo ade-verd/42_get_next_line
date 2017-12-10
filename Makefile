@@ -6,14 +6,14 @@
 #    By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/05 13:46:57 by ade-verd          #+#    #+#              #
-#    Updated: 2017/12/10 16:53:13 by ade-verd         ###   ########.fr        #
+#    Updated: 2017/12/10 21:47:16 by ade-verd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = get_next_line
 
-SRC_PATH = src/
-SRC_NAME = main.c\
+SRC_PATH = ./
+SRC_NAME = main_test.c\
 		   get_next_line.c
 
 SRC = $(addprefix $(SRC_PATH)/,$(SRC_NAME))
@@ -22,11 +22,11 @@ OBJ_PATH = obj/
 OBJ_NAME = $(SRC_NAME:.c=.o)
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 
-CPPFLAGS = -Iinclude -Ilibft
+CPPFLAGS = -I$(INC_PATH) -Ilibft/includes
 LDFLAGS = -Llibft
 LDLIBS = -lft
 LIB_PATH = libft
-INC_PATH = include/
+INC_PATH = ./
 
 OS = $(shell uname)
 ifeq ($(OS), Darwin)
@@ -69,7 +69,7 @@ lib:
 obj:
 	@mkdir -p $(OBJ_PATH)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c ./include
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 	@echo "Linking -> " $< $(DONE)
 

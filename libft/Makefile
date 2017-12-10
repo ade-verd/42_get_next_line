@@ -6,7 +6,7 @@
 #    By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/07 16:30:07 by ade-verd          #+#    #+#              #
-#    Updated: 2017/12/10 15:19:13 by ade-verd         ###   ########.fr        #
+#    Updated: 2017/12/10 21:24:55 by ade-verd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ NAME = libft.a
 CFLAGS = -Wall -Wextra -Werror
 CC = gcc
 
-INC_DIR = ./
+INC_DIR = includes
 SRC_DIR = ./
 SRC_1 = ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c\
 		ft_memchr.c ft_memcmp.c\
@@ -45,7 +45,10 @@ SRC_EXTRA = ft_abs.c ft_intlen.c ft_power.c ft_sqrt.c ft_int_sqrt.c\
 			ft_countwords.c ft_swap.c ft_memccpy_src.c
 
 SRC = $(SRC_1) $(SRC_2) $(SRC_BONUS) $(SRC_EXTRA)
-OBJ = $(SRC:.c=.o)
+
+OBJ_PATH = obj/
+OBJ_NAME = $(SRC:.c=.o)
+OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 
 C_NO = "\033[00m"
 C_DONE = "\033[35m"
@@ -59,14 +62,21 @@ ERROR = $(C_ERROR)ERROR$(C_NO)
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) -c $(SRC) -I $(INC_DIR)
+$(NAME): obj $(OBJ)
 	@ar -rc $(NAME) $(OBJ)
 	@ranlib $(NAME)
 	@echo "Compiling & Indexing -> " $(NAME) $(SUCCESS)
 
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c
+	@$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
+	@echo "Linking -> " $< $(DONE)
+
+obj:
+	@mkdir -p $(OBJ_PATH)
+
 clean:
 	@rm -f $(OBJ)
+	@rm -Rf $(OBJ_PATH)
 	@echo "Deleting object files -> " $(SUCCESS)
 
 fclean: clean
