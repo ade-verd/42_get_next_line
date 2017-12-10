@@ -6,14 +6,15 @@
 #    By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/05 13:46:57 by ade-verd          #+#    #+#              #
-#    Updated: 2017/12/08 20:24:18 by ade-verd         ###   ########.fr        #
+#    Updated: 2017/12/10 16:53:13 by ade-verd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = get_next_line
 
 SRC_PATH = src/
-SRC_NAME = main.c get_next_line.c
+SRC_NAME = main.c\
+		   get_next_line.c
 
 SRC = $(addprefix $(SRC_PATH)/,$(SRC_NAME))
 
@@ -22,28 +23,23 @@ OBJ_NAME = $(SRC_NAME:.c=.o)
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 
 CPPFLAGS = -Iinclude -Ilibft
-LDFLAGS = -L libft
+LDFLAGS = -Llibft
 LDLIBS = -lft
 LIB_PATH = libft
 INC_PATH = include/
 
-CC = gcc
-
-ifeq ($(UNAME), Darwin)
+OS = $(shell uname)
+ifeq ($(OS), Darwin)
 	CC := gcc
 	CFLAGS += -Werror -Wall -Wextra
 endif
-ifeq ($(UNAME), Linux)
+ifeq ($(OS), Linux)
 	ifeq (, $(shell which clang))
 		CC := gcc
 	else
 		CC := clang
 	endif
 	CFLAGS += -Wno-unused-result
-endif
-ifeq ($(UNAME), CYGWIN_NT-6.3)
-	CC := gcc
-	CFLAGS += -I./libft/inc
 endif
 
 #Colors font
@@ -63,8 +59,8 @@ WARNING = $(C_WARN)WARNING$(C_NO)
 
 all: $(NAME)
 
-$(NAME): lib obj $(OBJ) $(INC_PATH)
-	$(CC) $(LDFLAGS) $(LDLIBS) $(OBJ) -o $(NAME)
+$(NAME): obj $(OBJ) lib
+	@$(CC) $(OBJ) $(LDFLAGS) $(LDLIBS) -o $(NAME)
 	@echo "Compiling -> " $(NAME) $(SUCCESS)
 
 lib:
@@ -73,18 +69,18 @@ lib:
 obj:
 	@mkdir -p $(OBJ_PATH)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c ./include
+	@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 	@echo "Linking -> " $< $(DONE)
 
 clean:
-	rm -fv $(OBJ)
+	@rm -f $(OBJ)
 	@rm -Rf $(OBJ_PATH)
-	@echo "Cleaning all the Fillit objects -> " $(SUCCESS)
+	@echo "Cleaning all $(NAME)'s objects -> " $(SUCCESS)
 	@make -C $(LIB_PATH) clean
 
 fclean: clean
-	rm -fv $(NAME)
+	@rm -f $(NAME)
 	@make -C $(LIB_PATH) clean_only_lib
 	@echo "Deleting -> " $(NAME) $(SUCCESS)
 
@@ -93,6 +89,11 @@ re: fclean all
 norme:
 	norminette $(SRC)
 	norminette $(INC_PATH)*.h
+
+test:
+	@echo $(OS)
+	@echo $(CC)
+	@echo $(CFLAGS)
 
 # **************************************************************************** #
 # Personal notes :

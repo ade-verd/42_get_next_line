@@ -6,7 +6,7 @@
 #    By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/07 16:30:07 by ade-verd          #+#    #+#              #
-#    Updated: 2017/12/08 20:26:40 by ade-verd         ###   ########.fr        #
+#    Updated: 2017/12/10 15:19:13 by ade-verd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,15 +66,15 @@ $(NAME): $(OBJ)
 	@echo "Compiling & Indexing -> " $(NAME) $(SUCCESS)
 
 clean:
-	rm -f $(OBJ)
+	@rm -f $(OBJ)
 	@echo "Deleting object files -> " $(SUCCESS)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 	@echo "Deleting library -> " $(NAME) $(SUCCESS)
 
 clean_only_lib:
-	rm -f $(NAME)
+	@rm -f $(NAME)
 	@echo "Deleting library -> " $(NAME) $(SUCCESS)
 
 re: fclean all
