@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 17:46:04 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/10 17:15:35 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/10 17:34:36 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_display_all_fd(fd)
 			printf("get_next_line() error\n");
 			return ;
 		}
-		printf("fd:%d\tline: %d\t\t%-30s\treturn: %d\n", fd, i, line, ret);
+		printf("line: %d\t\t%-30s\treturn: %d\n", i, line, ret);
 		ft_memdel((void**)&line);
 		i++;
 	}

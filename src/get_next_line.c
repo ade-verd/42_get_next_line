@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/10 17:26:56 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/10 18:33:32 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,23 +53,24 @@ static t_fd		*ft_read_fd(const int fd, t_fd **first_link)
 	int		len;
 
 	len = 0;
-	tmp = (char*)malloc(1);
+	str = (char*)malloc(1);
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
-		buf[BUFF_SIZE] = '\0';
-		len = len + BUFF_SIZE;
-		if (!(str = (char*)malloc(sizeof(char) * len + 1)))
+		buf[ret] = '\0';
+		len = len + ret;
+		if (!(tmp = (char*)ft_memalloc(sizeof(char) * len + 1)))
 			return (NULL);
-		str = ft_strjoin(tmp, buf);
-		ft_memdel((void**)&tmp);
-		if (!(tmp = (char*)malloc(sizeof(char) * len +1)))
-			return (NULL);
-		ft_strcpy(tmp, str);
+		tmp = ft_strjoin(str, buf);
 		ft_memdel((void**)&str);
+		if (!(str = (char*)ft_memalloc(sizeof(char) * len + 1)))
+			return (NULL);
+		ft_strcpy(str, tmp);
+		ft_memdel((void**)&tmp);
 	}
 	if (ret == -1)
 		return (NULL);
-	return(ft_fill_fd(fd, first_link, &tmp));
+	printf("\nstr:\n%s", str);
+	return(ft_fill_fd(fd, first_link, &str));
 }
 
 static t_fd		*ft_seek_link(int fd, t_fd *files)
@@ -103,8 +104,7 @@ int				get_next_line(const int fd, char **line)
 	if (!*line)
 		return (-1);
 	*line = ft_strtrim(*line);
-	printf("len: %lu\t", ft_strlen(match_fd->rest));
-//	if (ft_strlen(match_fd->rest) > 0)
+	printf("rest_len: %lu\tfd: %d\t", ft_strlen(match_fd->rest), fd);
 	if (ft_strchr(match_fd->rest, '\n'))
 		return (1);
 	match_fd->fd = 0;
