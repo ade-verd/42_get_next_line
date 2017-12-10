@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/07 19:12:06 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/10 17:26:56 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,8 @@ int				get_next_line(const int fd, char **line)
 		return (-1);
 	*line = ft_strtrim(*line);
 	printf("len: %lu\t", ft_strlen(match_fd->rest));
-	if (ft_strlen(match_fd->rest) > 0)
+//	if (ft_strlen(match_fd->rest) > 0)
+	if (ft_strchr(match_fd->rest, '\n'))
 		return (1);
 	match_fd->fd = 0;
 	match_fd->rest = NULL;

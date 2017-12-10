@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 17:46:04 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/08 10:47:25 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/10 17:15:35 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,23 @@ int		ft_open_file(char *path, int flags)
 	return (fd);
 }
 
-void		ft_display_all_fd(char *path)
+int		ft_close(int fd)
 {
-	int		fd;
+	if (close(fd) == -1)
+	{
+		ft_putstr_fd("close() error\n", 2);
+		return (-1);
+	}
+	return (1);
+}
+
+void	ft_display_all_fd(fd)
+{
 	char	*line;
 	int		ret;
 	int		i;
 
 	i = 0;
-	if ((fd = ft_open_file(path, O_RDONLY)) == -1)
-	{
-		ft_putstr_fd("open() error", 2);
-		return ;
-	}
 	while ((ret = get_next_line(fd, &line)) > 0)
 	{
 		if (ret == -1)
@@ -46,16 +50,11 @@ void		ft_display_all_fd(char *path)
 			printf("get_next_line() error\n");
 			return ;
 		}
-		printf("line: %d\t\t%-30s\treturn: %d\n", i, line, ret);
+		printf("fd:%d\tline: %d\t\t%-30s\treturn: %d\n", fd, i, line, ret);
 		ft_memdel((void**)&line);
 		i++;
 	}
 	printf("line: %d\t\t%-30s\treturn: %d\n", i, line, ret);
-	if (close(fd) == -1)
-	{
-		printf("close() error\n");
-		return ;
-	}
 }
 
 /*int		ft_two_fd(int fd1, int fd2)
@@ -65,14 +64,23 @@ void		ft_display_all_fd(char *path)
 
 int		main(int ac, char **av)
 {
+	int		fd1;
+	int		fd2;
+
 	if (ac >= 2)
 	{
-		ft_display_all_fd(av[1]);
+		if ((fd1 = ft_open_file(av[1], O_RDONLY)) == -1)
+			return (-1);
+		if ((fd2 = ft_open_file(av[2], O_RDONLY)) == -1)
+			return (-1);
+		ft_display_all_fd(fd1);
 		ft_putstr("-------\n");
-		ft_display_all_fd(av[2]);
+		ft_display_all_fd(fd2);
 		ft_putstr("-------\n");
-		ft_display_all_fd(av[1]);
+		ft_display_all_fd(fd1);
 		ft_putstr("-------\n");
+	if (ft_close(fd1) == -1 || ft_close(fd2) == -1)
+		return (-1);
 	}
 	return (0);
 }
