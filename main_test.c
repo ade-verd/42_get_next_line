@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 17:46:04 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/11 12:32:57 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/11 18:42:57 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,20 +87,21 @@ void	ft_display_altern_fd(int fd1, int fd2)
 int		main(int ac, char **av)
 {
 	int		fd1;
-	int		fd2;
+	//int		fd2;
 
 	if (ac >= 2)
 	{
 		if ((fd1 = ft_open_file(av[1], O_RDONLY)) == -1)
 			return (-1);
-		if ((fd2 = ft_open_file(av[2], O_RDONLY)) == -1)
-			return (-1);
-//		ft_display_all_fd(fd1);
+		//if ((fd2 = ft_open_file(av[2], O_RDONLY)) == -1)
+		//	return (-1);
+		ft_display_all_fd(fd1);
 //		ft_display_all_fd(fd2);
 	//	ft_display_all_fd(fd1);
 
-		ft_display_altern_fd(fd1, fd2);
-		if (ft_close(fd1) == -1 || ft_close(fd2) == -1)
+//		ft_display_altern_fd(fd1, fd2);
+//		if (ft_close(fd1) == -1 || ft_close(fd2) == -1)
+		if (ft_close(fd1) == -1)
 			return (-1);
 	}
 	return (0);
