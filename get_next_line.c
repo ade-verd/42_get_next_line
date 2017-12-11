@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/10 23:31:00 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/11 13:20:49 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int				get_next_line(const int fd, char **line)
 	static t_fd	*files;
 	t_fd		*match_fd;
 
-	if (!fd || !line)
+	if (fd < 0 || !line)
 		return (-1);
 	if (!(match_fd = ft_seek_link(fd, files)))
 	{
@@ -96,19 +96,25 @@ int				get_next_line(const int fd, char **line)
 			return (-1);
 	}
 	if (ft_strlen(match_fd->rest) == 0)
+	{
+	//	match_fd->fd = 0;
+	//	match_fd->rest = NULL;
+	//	ft_memdel((void**)&match_fd);
 		return (0);
+	}
 	if (!(*line = ft_strnew(sizeof(char) * ft_strlen(match_fd->rest))))
 		return (-1);
+	//printf("len: %lu\trest: %s\t", ft_strlen(match_fd->rest),match_fd->rest);
 	if (!(match_fd->rest = (char*)ft_memccpy_src(*line, match_fd->rest, '\n', 
 					ft_strlen(match_fd->rest) + 1)))
 		return (-1);
-	//*line = ft_strtrim(*line);
 	if (ft_strchr(*line, '\n'))
 		*line = ft_strsub(*line, 0, ft_strlen(*line) - 1);
+	//printf("line: %s\n", *line);
 	if (ft_strchr(match_fd->rest, '\n'))
 		return (1);
-	match_fd->fd = 0;
-	match_fd->rest = NULL;
+//	match_fd->fd = 0;
+//	match_fd->rest = NULL;
 	//ft_memdel((void**)&match_fd);
 	//printf("line: %s\n", *line);
 	return (1);
