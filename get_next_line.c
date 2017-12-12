@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/11 18:42:56 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/12 13:42:04 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,14 @@ static t_fd		*ft_read_fd(const int fd, t_fd **first_link)
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[ret] = '\0';
-		tmp = ft_strjoin(str, buf);
+		EXIST_NULL((tmp = ft_strjoin(str, buf)));
 		ft_memdel((void**)&str);
-		str = ft_strdup(tmp);
+		EXIST_NULL((str = ft_strdup(tmp)));
 		ft_memdel((void**)&tmp);
 	}
 	if (ret == -1)
 		return (NULL);
-	return(ft_fill_fd(fd, first_link, &str));
+	return (ft_fill_fd(fd, first_link, &str));
 }
 
 static t_fd		*ft_seek_link(int fd, t_fd *files)
@@ -80,14 +80,13 @@ int				get_next_line(const int fd, char **line)
 {
 	static t_fd	*files;
 	t_fd		*match_fd;
+	int			len;
 
+	len = 0;
 	if (fd < 0 || !line)
 		return (-1);
 	if (!(match_fd = ft_seek_link(fd, files)))
-	{
-		if (!(match_fd = ft_read_fd(fd, &files)))
-			return (-1);
-	}
+		EXIST_INT((match_fd = ft_read_fd(fd, &files)));
 	if (match_fd && ft_strlen(match_fd->rest) == 0)
 	{
 		//match_fd->fd = 0;
@@ -96,14 +95,13 @@ int				get_next_line(const int fd, char **line)
 		//ft_memdel((void**)&match_fd);
 		return (0);
 	}
-	if (!(*line = ft_strnew(ft_strlen(match_fd->rest))))
-		return (-1);
-	if (!(match_fd->rest = (char*)ft_memccpy_src(*line, match_fd->rest, '\n', 
-					ft_strlen(match_fd->rest) + 1)))
-		return (-1);
-	if (ft_strchr(*line, '\n'))
-		*line = ft_strsub(*line, 0, ft_strlen(*line) - 1);
+	while (match_fd->rest[len] && match_fd->rest[len] != '\n')
+		len++;
+	//len = match_fd->rest[len] == '\n' ? len : len - 1;
+	EXIST_INT((*line = ft_strsub(match_fd->rest, 0, len)));
 	if (ft_strchr(match_fd->rest, '\n'))
-		return (1);
+		match_fd->rest = ft_strchr(match_fd->rest, '\n') + 1;
+	else
+		match_fd->rest = ft_strchr(match_fd->rest, '\0');
 	return (1);
 }
