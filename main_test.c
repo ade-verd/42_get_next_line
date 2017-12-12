@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 17:46:04 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/12 13:16:29 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/12 19:09:53 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,37 @@ void	ft_display_altern_fd(int fd1, int fd2)
 	}
 }
 
+void	ft_fucking_bastard_test(void)
+{
+	char	*line;
+	int		fd;
+	int		fd2;
+	int		fd3;
+	int		diff_file_size;
+
+	system("mkdir -p fd/sandbox");
+	system("openssl rand -base64 $((30 * 1000 * 3/4)) | tr -d '\n' | tr -d '\r' > fd/sandbox/one_big_fat_line.txt");
+	system("echo '\n' >> fd/sandbox/one_big_fat_line.txt");
+
+	fd = open("fd/sandbox/one_big_fat_line.txt", O_RDONLY);
+	fd2 = open("fd/sandbox/one_big_fat_line.txt.mine", O_CREAT | O_RDWR | O_TRUNC, 0755);
+
+	while (get_next_line(fd, &line) == 1)
+	{
+		write(fd2, line, strlen(line));
+		write(fd2, "\n", 1);
+	}
+	if (line)
+		write(fd2, line, strlen(line));
+	close(fd);
+	close(fd2);
+	system("diff fd/sandbox/one_big_fat_line.txt fd/sandbox/one_big_fat_line.txt.mine > fd/sandbox/one_big_fat_line.diff");
+	fd3 = open("fd/sandbox/one_big_fat_line.diff", O_RDONLY);
+	diff_file_size = read(fd3, NULL, 10);
+	close(fd3);
+	printf("diff\t%d\n", diff_file_size);
+}
+
 int		main(int ac, char **av)
 {
 	int		fd1;
@@ -95,6 +126,7 @@ int		main(int ac, char **av)
 			return (-1);
 	//	if ((fd2 = ft_open_file(av[2], O_RDONLY)) == -1)
 	//		return (-1);
+	//	ft_fucking_bastard_test();
 		ft_display_all_fd(fd1);
 	//	ft_display_all_fd(fd2);
 	//	ft_display_all_fd(fd1);

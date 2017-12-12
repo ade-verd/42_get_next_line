@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/12 13:42:04 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/12 19:09:48 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int				get_next_line(const int fd, char **line)
 {
 	static t_fd	*files;
 	t_fd		*match_fd;
+	char		*tmp;
 	int			len;
 
 	len = 0;
@@ -87,21 +88,24 @@ int				get_next_line(const int fd, char **line)
 		return (-1);
 	if (!(match_fd = ft_seek_link(fd, files)))
 		EXIST_INT((match_fd = ft_read_fd(fd, &files)));
-	if (match_fd && ft_strlen(match_fd->rest) == 0)
-	{
-		//match_fd->fd = 0;
-		//ft_memdel((void**)&match_fd->rest);
-		//match_fd->rest = NULL;
-		//ft_memdel((void**)&match_fd);
+	if (!ft_strlen(match_fd->rest))
 		return (0);
-	}
 	while (match_fd->rest[len] && match_fd->rest[len] != '\n')
 		len++;
-	//len = match_fd->rest[len] == '\n' ? len : len - 1;
 	EXIST_INT((*line = ft_strsub(match_fd->rest, 0, len)));
-	if (ft_strchr(match_fd->rest, '\n'))
-		match_fd->rest = ft_strchr(match_fd->rest, '\n') + 1;
+	EXIST_INT((tmp = ft_strdup(match_fd->rest)));
+	if (ft_strchr(tmp, '\n'))
+	{
+		ft_memdel((void**)&match_fd->rest);
+		EXIST_INT((match_fd->rest = ft_strsub(ft_strchr(tmp, '\n') + 1, 0,
+						ft_strlen(tmp))));
+	}
 	else
-		match_fd->rest = ft_strchr(match_fd->rest, '\0');
+	{
+		//ft_strclr(match_fd->rest);
+		match_fd->rest = NULL;
+		match_fd->fd = -1;
+	}
+	ft_memdel((void**)&tmp);
 	return (1);
 }

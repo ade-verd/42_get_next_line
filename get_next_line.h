@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:15:05 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/12 11:46:53 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/12 19:09:50 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # include <stdio.h> // A SUPPRIMER printf
 
-# define BUFF_SIZE 4
+# define BUFF_SIZE 8
 # define EXIST_INT(x) if (!x) return (-1);
 # define EXIST_NULL(x) if (!x) return (NULL);
 
