@@ -6,11 +6,16 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/13 15:11:01 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/13 16:31:51 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+/*
+** ft_fill_fd
+** Creates a new link and fills it.
+*/
 
 static t_list		*ft_fill_fd(int fd, t_list **first_link, char **str)
 {
@@ -29,6 +34,11 @@ static t_list		*ft_fill_fd(int fd, t_list **first_link, char **str)
 	}
 	return (new_fd);
 }
+
+/*
+** ft_read_fd
+** Reads all fd's content
+*/
 
 static t_list		*ft_read_fd(const int fd, t_list **first_link)
 {
@@ -51,16 +61,11 @@ static t_list		*ft_read_fd(const int fd, t_list **first_link)
 	return (ft_fill_fd(fd, first_link, &str));
 }
 
-static t_list		*ft_seek_link(int fd, t_list *files)
-{
-	while (files)
-	{
-		if (files->content_size == (size_t)fd)
-			return (files);
-		files = files->next;
-	}
-	return (NULL);
-}
+/*
+** ft_resize_content
+** Checks if there is an other line to read.
+** In case of '\n' in *str, free & fill match_fd->content with the next line.
+*/
 
 static int			ft_resize_content(t_list *match_fd, char **str)
 {
@@ -75,6 +80,31 @@ static int			ft_resize_content(t_list *match_fd, char **str)
 	ft_strdel(str);
 	return (1);
 }
+
+/*
+** ft_seek_link
+** Searches equivalent file descriptor in t_list files->content_size
+*/
+
+static t_list		*ft_seek_link(int fd, t_list *files)
+{
+	while (files)
+	{
+		if (files->content_size == (size_t)fd)
+			return (files);
+		files = files->next;
+	}
+	return (NULL);
+}
+
+/*
+** get_next_line
+** Extracts a line from fd.
+** A line is ended by '\n' or EOF (End Of File)
+**
+** Return
+** (1) A line is read | (0) Reading is over | (-1) Error
+*/
 
 int					get_next_line(const int fd, char **line)
 {
