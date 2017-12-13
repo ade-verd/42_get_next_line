@@ -6,34 +6,20 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/12 19:09:48 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/13 15:11:01 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static void		ft_lstappend(t_fd *new, t_fd *fd)
+static t_list		*ft_fill_fd(int fd, t_list **first_link, char **str)
 {
-	t_fd	*current;
+	t_list	*new_fd;
 
-	if (fd && new)
-	{
-		current = fd;
-		while (current->next != NULL)
-			current = current->next;
-		current->next = new;
-		new->next = NULL;
-	}
-}
-
-static t_fd		*ft_fill_fd(int fd, t_fd **first_link, char **str)
-{
-	t_fd	*new_fd;
-
-	if (!(new_fd = (t_fd*)malloc(sizeof(t_fd))))
+	if (!(new_fd = (t_list*)malloc(sizeof(t_list))))
 		return (NULL);
-	new_fd->fd = fd;
-	new_fd->rest = *str;
+	new_fd->content_size = fd;
+	new_fd->content = *str;
 	if (*first_link != NULL)
 		ft_lstappend(new_fd, *first_link);
 	else
@@ -44,7 +30,7 @@ static t_fd		*ft_fill_fd(int fd, t_fd **first_link, char **str)
 	return (new_fd);
 }
 
-static t_fd		*ft_read_fd(const int fd, t_fd **first_link)
+static t_list		*ft_read_fd(const int fd, t_list **first_link)
 {
 	int		ret;
 	char	buf[BUFF_SIZE + 1];
@@ -65,47 +51,54 @@ static t_fd		*ft_read_fd(const int fd, t_fd **first_link)
 	return (ft_fill_fd(fd, first_link, &str));
 }
 
-static t_fd		*ft_seek_link(int fd, t_fd *files)
+static t_list		*ft_seek_link(int fd, t_list *files)
 {
 	while (files)
 	{
-		if (files->fd == fd)
+		if (files->content_size == (size_t)fd)
 			return (files);
 		files = files->next;
 	}
 	return (NULL);
 }
 
-int				get_next_line(const int fd, char **line)
+static int			ft_resize_content(t_list *match_fd, char **str)
 {
-	static t_fd	*files;
-	t_fd		*match_fd;
-	char		*tmp;
-	int			len;
+	if (ft_strchr(*str, '\n'))
+	{
+		ft_memdel((void**)&match_fd->content);
+		EXIST_INT((match_fd->content = ft_strsub(ft_strchr(*str, '\n') + 1, 0,
+						ft_strlen(*str))));
+	}
+	else
+		ft_strclr(match_fd->content);
+	ft_strdel(str);
+	return (1);
+}
+
+int					get_next_line(const int fd, char **line)
+{
+	static t_list	*files;
+	t_list			*match_fd;
+	char			*tmp;
+	int				len;
 
 	len = 0;
 	if (fd < 0 || !line)
 		return (-1);
 	if (!(match_fd = ft_seek_link(fd, files)))
 		EXIST_INT((match_fd = ft_read_fd(fd, &files)));
-	if (!ft_strlen(match_fd->rest))
+	if (!ft_strlen(match_fd->content))
+	{
+		match_fd->content_size = -1;
+		*line = NULL;
 		return (0);
-	while (match_fd->rest[len] && match_fd->rest[len] != '\n')
+	}
+	tmp = match_fd->content;
+	while (tmp[len] && tmp[len] != '\n')
 		len++;
-	EXIST_INT((*line = ft_strsub(match_fd->rest, 0, len)));
-	EXIST_INT((tmp = ft_strdup(match_fd->rest)));
-	if (ft_strchr(tmp, '\n'))
-	{
-		ft_memdel((void**)&match_fd->rest);
-		EXIST_INT((match_fd->rest = ft_strsub(ft_strchr(tmp, '\n') + 1, 0,
-						ft_strlen(tmp))));
-	}
-	else
-	{
-		//ft_strclr(match_fd->rest);
-		match_fd->rest = NULL;
-		match_fd->fd = -1;
-	}
-	ft_memdel((void**)&tmp);
+	EXIST_INT((*line = ft_strsub(match_fd->content, 0, len)));
+	EXIST_INT((tmp = ft_strdup(match_fd->content)));
+	ft_resize_content(match_fd, &tmp);
 	return (1);
 }

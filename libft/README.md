@@ -176,6 +176,11 @@ Prend en parametre l’adresse d’un pointeur sur un maillon et libere la memoi
 
 Ajoute l'element new en tete de la liste.
 
+### [X] ft_lstappend
+> void	ft_lstappend(t_list *new0, t_list *first_link);
+
+Ajoute l'element new en fin de liste.
+
 ### [x] ft_lstiter
 > void	ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 

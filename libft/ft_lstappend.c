@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_lstappend.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/05 16:15:05 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/13 15:10:53 by ade-verd         ###   ########.fr       */
+/*   Created: 2017/12/13 11:59:35 by ade-verd          #+#    #+#             */
+/*   Updated: 2017/12/13 12:02:53 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdlib.h>
-# include "libft.h"
+void		ft_lstappend(t_list *new, t_list *first_link)
+{
+	t_list	*current;
 
-# define BUFF_SIZE 3
-# define EXIST_INT(x) if (!x) return (-1);
-# define EXIST_NULL(x) if (!x) return (NULL);
-
-int				get_next_line(const int fd, char **line);
-
-#endif
+	if (first_link && new)
+	{
+		current = first_link;
+		while (current->next != NULL)
+			current = current->next;
+		current->next = new;
+		new->next = NULL;
+	}
+}
