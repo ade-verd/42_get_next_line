@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/14 10:43:38 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/14 12:07:22 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ static t_list		*ft_read_fd(const int fd, t_list **first_link)
 	{
 		buf[ret] = '\0';
 		EXIST_NULL((tmp = ft_strjoin(str, buf)));
-		ft_memdel((void**)&str);
+		ft_strdel(&str);
 		EXIST_NULL((str = ft_strdup(tmp)));
-		ft_memdel((void**)&tmp);
+		ft_strdel(&tmp);
 	}
 	if (ret == -1)
 		return (NULL);
@@ -71,7 +71,7 @@ static int			ft_resize_content(t_list *match_fd, char **str)
 {
 	if (ft_strchr(*str, '\n'))
 	{
-		ft_memdel((void**)&match_fd->content);
+		ft_memdel(&match_fd->content);
 		EXIST_INT((match_fd->content = ft_strsub(ft_strchr(*str, '\n') + 1, 0,
 						ft_strlen(*str))));
 	}
