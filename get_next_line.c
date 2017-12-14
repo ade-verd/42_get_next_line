@@ -6,7 +6,7 @@
 /*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:13:45 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/13 16:31:51 by ade-verd         ###   ########.fr       */
+/*   Updated: 2017/12/14 10:43:38 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int					get_next_line(const int fd, char **line)
 	int				len;
 
 	len = 0;
-	if (fd < 0 || !line)
+	if (fd < 0 || !line || BUFF_SIZE < 0)
 		return (-1);
 	if (!(match_fd = ft_seek_link(fd, files)))
 		EXIST_INT((match_fd = ft_read_fd(fd, &files)));
