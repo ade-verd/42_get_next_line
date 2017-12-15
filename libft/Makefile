@@ -6,7 +6,7 @@
 #    By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/07 16:30:07 by ade-verd          #+#    #+#              #
-#    Updated: 2017/12/13 12:02:06 by ade-verd         ###   ########.fr        #
+#    Updated: 2017/12/15 16:32:09 by ade-verd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,41 +50,67 @@ OBJ_PATH = obj/
 OBJ_NAME = $(SRC:.c=.o)
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 
-C_NO = "\033[00m"
-C_DONE = "\033[35m"
-C_GOOD = "\033[32m"
-C_ERROR = "\033[31m"
-C_WARN = "\033[33m"
+# **************************************************************************** #
+# SPECIALS CHARS                                                               #
+# **************************************************************************** #
+LOG_CLEAR = \033[2K
+LOG_UP = \033[A
+LOG_NOCOLOR = \033[0m
+LOG_BOLD = \033[1m
+LOG_UNDERLINE = \033[4m
+LOG_BLINKING = \033[5m
+LOG_BLACK = \033[1;30m
+LOG_RED = \033[1;31m
+LOG_GREEN = \033[1;32m
+LOG_YELLOW = \033[1;33m
+LOG_BLUE = \033[1;34m
+LOG_VIOLET = \033[1;35m
+LOG_CYAN = \033[1;36m
+LOG_WHITE = \033[1;37m
 
-SUCCESS = $(C_GOOD)SUCCESS$(C_NO)
-DONE = $(C_DONE)DONE$(C_NO)
-ERROR = $(C_ERROR)ERROR$(C_NO)
+TITLE = $(LOG_CLEAR)$(LOG_BLUE)
+END_TITLE = $(LOG_NOCOLOR)
+LINKING = "--$(LOG_CLEAR)$(LOG_GREEN)✓$(LOG_NOCOLOR)\tlinking " \
+				".................. $(LOG_VIOLET)$<$(LOG_NOCOLOR)"
+ASSEMBLING = "--$(LOG_CLEAR)$(LOG_GREEN)✓$(LOG_NOCOLOR)\tassembling " \
+			 	"............... $(LOG_YELLOW)$(NAME)$(LOG_NOCOLOR)"
+INDEXING = "--$(LOG_CLEAR)$(LOG_GREEN)✓$(LOG_NOCOLOR)\tindexing " \
+			 	"................. $(LOG_YELLOW)$(NAME)$(LOG_NOCOLOR)"
+OBJECTS_DEL = "--$(LOG_CLEAR)$(LOG_YELLOW)Objects$(LOG_NOCOLOR) deletion " \
+				"............ $(LOG_RED)×$(LOG_NOCOLOR)"
+BIN_DEL = "--$(LOG_CLEAR)$(LOG_YELLOW)Binary$(LOG_NOCOLOR) deletion " \
+				"............. $(LOG_RED)×$(LOG_NOCOLOR)"
+
+# **************************************************************************** #
+# RULES                                                                        #
+# **************************************************************************** #
+
+.PHONY: all, clean, fclean, re, norme
 
 all: $(NAME)
 
 $(NAME): obj $(OBJ)
-	@ar -rc $(NAME) $(OBJ)
-	@ranlib $(NAME)
-	@echo "Compiling & Indexing -> " $(NAME) $(SUCCESS)
+	@ar -rc $(NAME) $(OBJ) && echo -e $(ASSEMBLING)
+	@ranlib $(NAME) && echo -e $(INDEXING)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
-	@echo "Linking -> " $< $(DONE)
+	@echo -e $(LINKING)
 
 obj:
+	@echo -e "$(TITLE)build $(NAME)$(END_TITLE)"
 	@mkdir -p $(OBJ_PATH)
 
 clean:
-	@rm -f $(OBJ)
+	@echo -e "$(TITLE)clean $(NAME)$(END_TITLE)"
+	@echo -e $(OBJECTS_DEL)
 	@rm -Rf $(OBJ_PATH)
-	@echo "Deleting object files -> " $(SUCCESS)
 
-fclean: clean
+fclean:
+	@echo -e "$(TITLE)fclean $(NAME)$(END_TITLE)"
+	@echo -e $(OBJECTS_DEL)
+	@rm -Rf $(OBJ_PATH)
+	@echo -e $(BIN_DEL)
 	@rm -f $(NAME)
-	@echo "Deleting library -> " $(NAME) $(SUCCESS)
-
-clean_only_lib:
-	@rm -f $(NAME)
-	@echo "Deleting library -> " $(NAME) $(SUCCESS)
 
 re: fclean all
