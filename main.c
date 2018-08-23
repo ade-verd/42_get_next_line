@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_test.c                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ade-verd <ade-verd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 17:46:04 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/13 15:35:33 by ade-verd         ###   ########.fr       */
+/*   Updated: 2018/08/23 12:24:51 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ int		ft_close(int fd)
 	return (1);
 }
 
-void	ft_print_n_free(int i, int ret, int fd, char **line)
+void	ft_print_n_free(int i, int ret, int fd, char *line)
 {
-	printf("line: %d\t\treturn: %d\tfd: %d\t|%s|\n", i, ret, fd, *line);
-	ft_memdel((void**)line);
+	printf("line: %-5d\treturn: %-2d\tfd: %-2d\t|%s|\n", i, ret, fd, line);
+	ft_strdel(&line);
 }
 
 int		ft_display_all_fd(char *path)
@@ -60,7 +60,7 @@ int		ft_display_all_fd(char *path)
 			printf("get_next_line() error\n");
 			return (-1);
 		}
-		ft_print_n_free(i, ret, fd, &line);
+		ft_print_n_free(i, ret, fd, line);
 		i++;
 	}
 	printf("-----\n");
@@ -87,9 +87,9 @@ int		ft_display_altern_fd(char *path1, char *path2, int fd1, int fd2)
 	while (ret1 || ret2)
 	{
 		if ((ret1 = get_next_line(fd1, &line1)) == 1)
-			ft_print_n_free(i, ret1, fd1, &line1);
+			ft_print_n_free(i, ret1, fd1, line1);
 		if ((ret2 = get_next_line(fd2, &line2)) == 1)
-			ft_print_n_free(i, ret2, fd2, &line2);
+			ft_print_n_free(i, ret2, fd2, line2);
 		if (ret1 == ret2)
 			printf("-----\n");
 		i++;
