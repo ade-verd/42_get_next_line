@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ade-verd <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ade-verd <ade-verd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 16:15:05 by ade-verd          #+#    #+#             */
-/*   Updated: 2017/12/14 11:59:51 by ade-verd         ###   ########.fr       */
+/*   Updated: 2018/05/25 13:21:26 by ade-verd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@
 # include <stdlib.h>
 # include "libft.h"
 
-# define BUFF_SIZE 10000
-# define EXIST_INT(x) if (!x) return (-1);
-# define EXIST_NULL(x) if (!x) return (NULL);
+# define BUFF_SIZE 42
+# define MALLCHECK(x) if (!x) return (-1);
 
 int				get_next_line(const int fd, char **line);
 
